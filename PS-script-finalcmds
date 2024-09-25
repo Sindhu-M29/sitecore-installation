@@ -1,0 +1,39 @@
+$SCSDK="D:\Users\Sindhuilango\Sitecore Azure Toolkit 3.0.0-r02547.1547"
+
+$SCTemplates="https://raw.githubusercontent.com/Sitecore/Sitecore-Azure-Quickstart-Templates/refs/heads/master/Sitecore%2010.2.0/XMSingle/azuredeploy.json"
+
+$DeploymentId = "sitecore-deployment-1"
+
+$LicenseFile = "file:///C:/Users/Sindhu.Ilango/Downloads/license%201.xml"
+
+$SubscriptionId = "42c342a3-b2db-4152-8914-f87ba358e0ff"
+
+$Location="EAST US"
+
+$ParamFile="D:\Users\Sindhuilango\azuredeploy.parameters.json"
+
+$Parameters = @{
+
+     #set the size of all recommended instance sizes  
+
+     "sitecoreSKU"="Small";
+
+     #by default this installs azuresearch
+
+     #if you uncomment the following it will use an existing solr connectionstring that
+
+     # you have created instead of using AzureSearch                                                                                                                                                             
+
+     #"solrConnectionString"= "https://myinstancesomewhere/solr";
+
+}
+
+Import-Module $SCSDK\tools\Sitecore.Cloud.Cmdlets.psm1
+
+Import-Module Az.Accounts
+
+Connect-AzAccount
+
+Set-AzContext -SubscriptionId $SubscriptionId
+
+Start-SitecoreAzureDeployment -Name $DeploymentId -Location $Location -ArmTemplateUrl "$SCTemplates/azuredeploy.json"  -ArmParametersPath $ParamFile  -LicenseXmlPath $LicenseFile  -SetKeyValue $Parameters
